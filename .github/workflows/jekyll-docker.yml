@@ -1,0 +1,2343 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#07111f">
+<title>QH VisionX Response</title>
+
+<!-- Leaflet -->
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+integrity="sha256-p4NxAoJBhIINfQ3E2R1e9c1r6x0J7m3z5e1V9s0b0xA="
+crossorigin=""/>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
+
+*{box-sizing:border-box}
+
+:root{
+ --bg:#07111f;
+ --panel:#0c192b;
+ --panel2:#101f34;
+ --gold:#ffd700;
+ --blue:#1a73e8;
+ --cyan:#00d9ff;
+ --green:#22c55e;
+ --red:#ef4444;
+ --text:#f5f7fa;
+ --muted:#9caec3;
+ --border:rgba(255,255,255,.10);
+ --shadow:0 15px 45px rgba(0,0,0,.35);
+}
+
+body{
+ margin:0;
+ font-family:Tajawal,Arial,sans-serif;
+ background:
+ radial-gradient(circle at 20% 10%,rgba(26,115,232,.15),transparent 30%),
+ radial-gradient(circle at 80% 20%,rgba(0,217,255,.08),transparent 30%),
+ var(--bg);
+ color:var(--text);
+ min-height:100vh;
+}
+
+button,input,textarea,select{font-family:inherit}
+
+button{
+ cursor:pointer;
+ border:0;
+}
+
+.hidden{display:none!important}
+
+.login{
+ min-height:100vh;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ padding:20px;
+}
+
+.login-card{
+ width:100%;
+ max-width:430px;
+ background:rgba(12,25,43,.94);
+ border:1px solid var(--border);
+ border-radius:25px;
+ padding:32px;
+ box-shadow:var(--shadow);
+ backdrop-filter:blur(18px);
+}
+
+.logo{
+ width:78px;
+ height:78px;
+ margin:auto;
+ border-radius:22px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:27px;
+ font-weight:800;
+ color:#06111e;
+ background:linear-gradient(135deg,var(--gold),#fff2a0);
+ box-shadow:0 0 35px rgba(255,215,0,.2);
+}
+
+h1,h2,h3{margin-top:0}
+
+.center{text-align:center}
+
+.muted{color:var(--muted)}
+
+.input{
+ width:100%;
+ padding:13px 15px;
+ margin:7px 0 12px;
+ border:1px solid var(--border);
+ border-radius:13px;
+ outline:none;
+ color:white;
+ background:#071321;
+}
+
+.input:focus{
+ border-color:var(--blue);
+ box-shadow:0 0 0 3px rgba(26,115,232,.15);
+}
+
+.btn{
+ padding:11px 15px;
+ border-radius:12px;
+ color:white;
+ background:#182a42;
+ border:1px solid var(--border);
+ transition:.2s;
+ margin:3px;
+}
+
+.btn:hover{
+ transform:translateY(-1px);
+ filter:brightness(1.15);
+}
+
+.btn.primary{
+ background:linear-gradient(135deg,#1265d9,#1a73e8);
+}
+
+.btn.gold{
+ color:#08111c;
+ background:linear-gradient(135deg,#ffd700,#fff09b);
+ font-weight:800;
+}
+
+.btn.success{background:#166534}
+.btn.danger{background:#991b1b}
+.btn.info{background:#075985}
+
+.app{
+ display:none;
+ min-height:100vh;
+}
+
+.sidebar{
+ position:fixed;
+ right:0;
+ top:0;
+ bottom:0;
+ width:260px;
+ background:rgba(6,17,31,.96);
+ border-left:1px solid var(--border);
+ padding:20px;
+ z-index:1000;
+ overflow:auto;
+}
+
+.brand{
+ display:flex;
+ align-items:center;
+ gap:12px;
+ margin-bottom:25px;
+}
+
+.brand-icon{
+ width:48px;
+ height:48px;
+ border-radius:14px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ color:#06111e;
+ background:linear-gradient(135deg,var(--gold),#fff09b);
+ font-weight:800;
+}
+
+.brand-title{font-weight:800}
+.brand-sub{font-size:11px;color:var(--muted)}
+
+.nav button{
+ width:100%;
+ text-align:right;
+ margin:4px 0;
+ background:transparent;
+ color:#dbe7f5;
+ border:1px solid transparent;
+ padding:13px;
+ border-radius:12px;
+}
+
+.nav button:hover,
+.nav button.active{
+ background:rgba(26,115,232,.14);
+ border-color:rgba(26,115,232,.25);
+ color:white;
+}
+
+.main{
+ margin-right:260px;
+ padding:25px;
+}
+
+.topbar{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:15px;
+ margin-bottom:20px;
+}
+
+.status{
+ display:flex;
+ gap:8px;
+ flex-wrap:wrap;
+}
+
+.badge{
+ display:inline-flex;
+ align-items:center;
+ padding:5px 9px;
+ border-radius:999px;
+ font-size:12px;
+ background:#24364d;
+ color:#dbe7f5;
+}
+
+.badge.ok{
+ background:rgba(34,197,94,.16);
+ color:#86efac;
+}
+
+.badge.warn{
+ background:rgba(245,158,11,.16);
+ color:#fcd34d;
+}
+
+.badge.error{
+ background:rgba(239,68,68,.16);
+ color:#fca5a5;
+}
+
+.section{
+ display:none;
+}
+
+.section.active{
+ display:block;
+}
+
+.grid{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:15px;
+}
+
+.card{
+ background:linear-gradient(145deg,rgba(16,31,52,.96),rgba(10,23,40,.96));
+ border:1px solid var(--border);
+ border-radius:18px;
+ padding:18px;
+ box-shadow:0 8px 30px rgba(0,0,0,.18);
+}
+
+.stat{
+ font-size:29px;
+ font-weight:800;
+ margin-top:8px;
+}
+
+.map-card{
+ padding:0;
+ overflow:hidden;
+}
+
+.map-toolbar{
+ padding:12px;
+ display:flex;
+ gap:5px;
+ flex-wrap:wrap;
+ border-bottom:1px solid var(--border);
+ background:#0b1829;
+}
+
+#map{
+ height:570px;
+ width:100%;
+}
+
+.leaflet-container{
+ background:#07111f;
+ font-family:Tajawal,Arial,sans-serif;
+}
+
+.table-wrap{
+ overflow:auto;
+}
+
+table{
+ width:100%;
+ border-collapse:collapse;
+}
+
+th,td{
+ padding:12px;
+ border-bottom:1px solid var(--border);
+ text-align:right;
+ white-space:nowrap;
+}
+
+th{
+ color:#b8c8da;
+ font-size:13px;
+}
+
+.empty{
+ text-align:center;
+ padding:30px;
+ color:var(--muted);
+}
+
+.form-grid{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:15px;
+}
+
+.form-full{
+ grid-column:1/-1;
+}
+
+textarea.input{
+ min-height:110px;
+ resize:vertical;
+}
+
+.toast{
+ position:fixed;
+ left:20px;
+ bottom:20px;
+ z-index:9999;
+ background:#102238;
+ border:1px solid var(--border);
+ padding:13px 17px;
+ border-radius:13px;
+ box-shadow:var(--shadow);
+ display:none;
+}
+
+.toast.show{display:block}
+
+.footer{
+ margin-top:30px;
+ color:#71849b;
+ text-align:center;
+ font-size:12px;
+ padding:20px;
+}
+
+@media(max-width:1000px){
+ .grid{grid-template-columns:repeat(2,1fr)}
+ .sidebar{width:220px}
+ .main{margin-right:220px}
+}
+
+@media(max-width:700px){
+ .sidebar{
+  position:relative;
+  width:100%;
+  height:auto;
+  border-left:0;
+  border-bottom:1px solid var(--border);
+ }
+ .main{margin-right:0;padding:12px}
+ .grid,.form-grid{grid-template-columns:1fr}
+ #map{height:450px}
+ .topbar{align-items:flex-start;flex-direction:column}
+}
+
+@media(max-width:480px){
+ .login-card{padding:22px}
+ #map{height:390px}
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= LOGIN ================= -->
+
+<div id="loginPage" class="login">
+
+<div class="login-card">
+
+<div class="logo">QH</div>
+
+<h1 class="center">QH VisionX</h1>
+
+<p class="center muted">
+Response & Emergency Coordination
+</p>
+
+<label>نام کاربری</label>
+<input id="username" class="input"
+autocomplete="username"
+placeholder="نام کاربری">
+
+<label>رمز عبور</label>
+<input id="password" class="input"
+type="password"
+autocomplete="current-password"
+placeholder="رمز عبور">
+
+<button id="loginBtn" class="btn gold"
+style="width:100%;margin-top:8px">
+ورود به Dashboard
+</button>
+
+<p class="center muted" style="font-size:12px;margin-top:18px">
+نسخه Frontend / Demo
+</p>
+
+</div>
+</div>
+
+
+<!-- ================= APPLICATION ================= -->
+
+<div id="app" class="app">
+
+<aside class="sidebar">
+
+<div class="brand">
+<div class="brand-icon">QH</div>
+<div>
+<div class="brand-title">QH VisionX</div>
+<div class="brand-sub">Response Platform</div>
+</div>
+</div>
+
+<div class="nav">
+
+<button class="active" data-section="dashboard">
+📊 داشبورد
+</button>
+
+<button data-section="mapSection">
+🗺️ نقشه و GPS
+</button>
+
+<button data-section="incidents">
+🚨 رویدادها
+</button>
+
+<button data-section="teams">
+👥 تیم‌ها
+</button>
+
+<button data-section="reports">
+📑 گزارش‌ها
+</button>
+
+<button data-section="settings">
+⚙️ تنظیمات
+</button>
+
+</div>
+
+<button id="logoutBtn"
+class="btn danger"
+style="width:100%;margin-top:20px">
+خروج
+</button>
+
+</aside>
+
+
+<main class="main">
+
+<div class="topbar">
+
+<div>
+<h2 id="pageTitle">داشبورد</h2>
+<div class="muted">
+QH VisionX Response
+</div>
+</div>
+
+<div class="status">
+<span id="onlineState" class="badge">
+بررسی اتصال…
+</span>
+
+<span id="gpsState" class="badge">
+GPS آماده
+</span>
+
+<span id="trackState" class="badge">
+ردیابی خاموش
+</span>
+</div>
+
+</div>
+
+
+<!-- ================= DASHBOARD ================= -->
+
+<section id="dashboard" class="section active">
+
+<div class="grid">
+
+<div class="card">
+<div class="muted">کل رویدادها</div>
+<div id="statIncidents" class="stat">0</div>
+</div>
+
+<div class="card">
+<div class="muted">رویدادهای باز</div>
+<div id="statOpen" class="stat">0</div>
+</div>
+
+<div class="card">
+<div class="muted">تیم‌ها</div>
+<div id="statTeams" class="stat">0</div>
+</div>
+
+<div class="card">
+<div class="muted">نقاط GPS</div>
+<div id="statLocations" class="stat">0</div>
+</div>
+
+</div>
+
+<div class="card" style="margin-top:15px">
+
+<h3>وضعیت سیستم</h3>
+
+<p>
+<b>GPS:</b>
+<span id="dashGps">آماده</span>
+</p>
+
+<p>
+<b>نقشه:</b>
+<span>Leaflet + Satellite/Hybrid</span>
+</p>
+
+<p>
+<b>ذخیره‌سازی:</b>
+<span>LocalStorage</span>
+</p>
+
+<p>
+<b>اتصال:</b>
+<span id="dashOnline">—</span>
+</p>
+
+</div>
+
+</section>
+
+
+<!-- ================= MAP ================= -->
+
+<section id="mapSection" class="section">
+
+<div class="card map-card">
+
+<div class="map-toolbar">
+
+<button id="gpsBtn" class="btn primary">
+📍 موقعیت من
+</button>
+
+<button id="liveBtn" class="btn info">
+🛰️ شروع ردیابی زنده
+</button>
+
+<button id="addMarkerBtn" class="btn">
+➕ افزودن نقطه
+</button>
+
+<button id="fitBtn" class="btn">
+🎯 نمایش همه
+</button>
+
+<button id="clearMarkersBtn" class="btn danger">
+🗑️ حذف نقاط
+</button>
+
+</div>
+
+<div style="padding:10px;background:#081627">
+
+<div style="display:flex;gap:5px">
+
+<input id="searchInput"
+class="input"
+style="margin:0"
+placeholder="جستجوی مکان در افغانستان…">
+
+<button id="searchBtn"
+class="btn primary">
+جستجو
+</button>
+
+</div>
+
+</div>
+
+<div id="map"></div>
+
+<div style="padding:14px">
+
+<div>
+<b>مختصات فعلی:</b>
+<span id="coords" class="muted">
+ثبت نشده
+</span>
+</div>
+
+<div style="margin-top:8px">
+<b>وضعیت:</b>
+<span id="mapStatus" class="muted">
+نقشه آماده است.
+</span>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================= INCIDENTS ================= -->
+
+<section id="incidents" class="section">
+
+<div class="card">
+
+<h3>ثبت رویداد جدید</h3>
+
+<div class="form-grid">
+
+<div>
+<label>عنوان رویداد</label>
+<input id="incidentTitle"
+class="input"
+placeholder="مثلاً حادثه ترافیکی">
+</div>
+
+<div>
+<label>سطح اولویت</label>
+
+<select id="incidentPriority" class="input">
+
+<option value="low">پایین</option>
+<option value="medium">متوسط</option>
+<option value="high">بالا</option>
+<option value="critical">بحرانی</option>
+
+</select>
+
+</div>
+
+<div>
+<label>مکان</label>
+<input id="incidentLocation"
+class="input"
+placeholder="کابل، افغانستان">
+</div>
+
+<div>
+<label>وضعیت</label>
+
+<select id="incidentStatus" class="input">
+
+<option value="open">باز</option>
+<option value="progress">در حال رسیدگی</option>
+<option value="closed">بسته</option>
+
+</select>
+
+</div>
+
+<div class="form-full">
+
+<label>توضیحات</label>
+
+<textarea id="incidentDescription"
+class="input"
+placeholder="جزئیات رویداد…"></textarea>
+
+</div>
+
+</div>
+
+<button id="addIncidentBtn"
+class="btn primary">
+ثبت رویداد
+</button>
+
+</div>
+
+
+<div class="card" style="margin-top:15px">
+
+<h3>فهرست رویدادها</h3>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+<th>عنوان</th>
+<th>اولویت</th>
+<th>مکان</th>
+<th>وضعیت</th>
+<th>زمان</th>
+<th>عملیات</th>
+</tr>
+</thead>
+
+<tbody id="incidentTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================= TEAMS ================= -->
+
+<section id="teams" class="section">
+
+<div class="card">
+
+<h3>ثبت تیم</h3>
+
+<div class="form-grid">
+
+<input id="teamName"
+class="input"
+placeholder="نام تیم">
+
+<input id="teamLead"
+class="input"
+placeholder="مسئول تیم">
+
+</div>
+
+<button id="addTeamBtn"
+class="btn primary">
+افزودن تیم
+</button>
+
+</div>
+
+<div class="card" style="margin-top:15px">
+
+<h3>تیم‌های ثبت‌شده</h3>
+
+<div id="teamList"></div>
+
+</div>
+
+</section>
+
+
+<!-- ================= REPORTS ================= -->
+
+<section id="reports" class="section">
+
+<div class="grid">
+
+<div class="card">
+<h3>گزارش سیستم</h3>
+<p class="muted">
+تعداد رویدادها
+</p>
+<strong id="reportIncidents">0</strong>
+</div>
+
+<div class="card">
+<h3>GPS</h3>
+<p class="muted">
+تعداد نقاط ذخیره‌شده
+</p>
+<strong id="reportLocations">0</strong>
+</div>
+
+<div class="card">
+<h3>تیم‌ها</h3>
+<p class="muted">
+تعداد تیم‌ها
+</p>
+<strong id="reportTeams">0</strong>
+</div>
+
+</div>
+
+<div class="card" style="margin-top:15px">
+
+<h3>Export داده‌ها</h3>
+
+<p class="muted">
+تمام داده‌های LocalStorage را به فایل JSON صادر کنید.
+</p>
+
+<button id="exportBtn" class="btn gold">
+⬇️ دریافت JSON
+</button>
+
+</div>
+
+</section>
+
+
+<!-- ================= SETTINGS ================= -->
+
+<section id="settings" class="section">
+
+<div class="card">
+
+<h3>تنظیمات سامانه</h3>
+
+<p>
+<b>نام سیستم:</b>
+QH VisionX Response
+</p>
+
+<p>
+<b>نسخه:</b>
+Final Single-File
+</p>
+
+<p>
+<b>نقشه:</b>
+OpenStreetMap / Esri Satellite
+</p>
+
+<p>
+<b>ذخیره‌سازی:</b>
+Browser LocalStorage
+</p>
+
+<hr style="border-color:var(--border)">
+
+<h3>مدیریت داده</h3>
+
+<button id="clearGpsBtn"
+class="btn danger">
+پاک‌سازی تاریخچه GPS
+</button>
+
+<button id="clearAllBtn"
+class="btn danger">
+پاک‌سازی تمام داده‌ها
+</button>
+
+<hr style="border-color:var(--border)">
+
+<p class="muted">
+
+<strong>نکته امنیتی:</strong>
+احراز هویت این نسخه فقط در سمت مرورگر انجام می‌شود و
+برای سامانه عملیاتی امن مناسب نیست.
+برای امنیت واقعی باید Backend، Authentication و مدیریت Secret
+اضافه شود.
+
+</p>
+
+<p class="muted">
+
+<strong>GPS:</strong>
+برای دریافت موقعیت واقعی، مرورگر باید اجازه Location داشته باشد
+و سایت باید روی HTTPS اجرا شود.
+
+</p>
+
+</div>
+
+</section>
+
+
+<div class="footer">
+QH VisionX Response • QH VisionX • Afghanistan
+</div>
+
+</main>
+</div>
+
+
+<div id="toast" class="toast"></div>
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+crossorigin=""></script>
+
+<script>
+
+/* =========================================================
+   QH VISIONX RESPONSE
+   ALL-IN-ONE JAVASCRIPT
+========================================================= */
+
+"use strict";
+
+const USERNAME = "admin";
+const PASSWORD = "QHVisionX@2026";
+
+const STORAGE_KEY = "QH_VISIONX_RESPONSE_FINAL";
+
+const $ = id => document.getElementById(id);
+
+
+/* =========================================================
+   DATABASE
+========================================================= */
+
+let db = JSON.parse(
+ localStorage.getItem(STORAGE_KEY) || "null"
+);
+
+if(!db){
+
+ db = {
+
+  incidents:[],
+
+  teams:[
+   {
+    id:crypto.randomUUID(),
+    name:"QH VisionX Response",
+    lead:"مدیریت سامانه"
+   }
+  ],
+
+  locations:[]
+
+ };
+
+ saveDB();
+
+}
+
+function saveDB(){
+
+ localStorage.setItem(
+  STORAGE_KEY,
+  JSON.stringify(db)
+ );
+
+ refreshUI();
+
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+let toastTimer;
+
+function toast(message){
+
+ const el=$("toast");
+
+ el.textContent=message;
+ el.classList.add("show");
+
+ clearTimeout(toastTimer);
+
+ toastTimer=setTimeout(
+  ()=>el.classList.remove("show"),
+  3000
+ );
+
+}
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+$("loginBtn").onclick=login;
+
+$("password").addEventListener(
+ "keydown",
+ e=>{
+  if(e.key==="Enter") login();
+ }
+);
+
+function login(){
+
+ const u=$("username").value.trim();
+ const p=$("password").value;
+
+ if(u===USERNAME && p===PASSWORD){
+
+  sessionStorage.setItem(
+   "qh_logged_in",
+   "1"
+  );
+
+  $("loginPage").style.display="none";
+  $("app").style.display="block";
+
+  initializeMap();
+
+  refreshUI();
+
+  toast("ورود موفقیت‌آمیز بود.");
+
+ }else{
+
+  toast("نام کاربری یا رمز عبور نادرست است.");
+
+ }
+
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+$("logoutBtn").onclick=()=>{
+
+ sessionStorage.removeItem(
+  "qh_logged_in"
+ );
+
+ location.reload();
+
+};
+
+
+/* =========================================================
+   SESSION
+========================================================= */
+
+if(
+ sessionStorage.getItem("qh_logged_in")==="1"
+){
+
+ $("loginPage").style.display="none";
+ $("app").style.display="block";
+
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+document.querySelectorAll(".nav button")
+.forEach(btn=>{
+
+ btn.onclick=()=>{
+
+  document
+   .querySelectorAll(".nav button")
+   .forEach(x=>x.classList.remove("active"));
+
+  btn.classList.add("active");
+
+  document
+   .querySelectorAll(".section")
+   .forEach(x=>x.classList.remove("active"));
+
+  const target=$(btn.dataset.section);
+
+  if(target)
+   target.classList.add("active");
+
+  const titles={
+   dashboard:"داشبورد",
+   mapSection:"نقشه و GPS",
+   incidents:"رویدادها",
+   teams:"تیم‌ها",
+   reports:"گزارش‌ها",
+   settings:"تنظیمات"
+  };
+
+  $("pageTitle").textContent=
+   titles[btn.dataset.section] || "QH VisionX";
+
+  if(btn.dataset.section==="mapSection" && map){
+
+   setTimeout(
+    ()=>map.invalidateSize(),
+    100
+   );
+
+  }
+
+ };
+
+});
+
+
+/* =========================================================
+   MAP VARIABLES
+========================================================= */
+
+let map=null;
+
+let userMarker=null;
+
+let accuracyCircle=null;
+
+let locationLayer=null;
+
+let trackingLine=null;
+
+let watchId=null;
+
+let liveTracking=false;
+
+let trackingPoints=[];
+
+
+/* =========================================================
+   MAP INITIALIZATION
+========================================================= */
+
+function initializeMap(){
+
+ if(map) return;
+
+ map=L.map("map",{
+  zoomControl:true,
+  attributionControl:true
+ }).setView(
+  [34.5553,69.2075],
+  12
+ );
+
+
+/* STREET */
+
+ const street=L.tileLayer(
+  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+  {
+   maxZoom:19,
+   attribution:
+   '&copy; OpenStreetMap contributors'
+  }
+ );
+
+
+/* SATELLITE */
+
+ const satellite=L.tileLayer(
+  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+  {
+   maxZoom:19,
+   attribution:
+   "Tiles &copy; Esri"
+  }
+ );
+
+
+/* HYBRID */
+
+ const labels=L.tileLayer(
+  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+  {
+   maxZoom:19,
+   opacity:.45,
+   attribution:
+   '&copy; OpenStreetMap contributors'
+  }
+ );
+
+
+ locationLayer=L.layerGroup().addTo(map);
+
+ street.addTo(map);
+
+
+ L.control.layers(
+  {
+   "🗺️ نقشه خیابانی":street,
+   "🛰️ Satellite":satellite,
+   "🌐 Hybrid":L.layerGroup([
+    satellite,
+    labels
+   ])
+  },
+  {
+   "📍 نقاط ذخیره‌شده":locationLayer
+  },
+  {
+   position:"topright"
+  }
+ ).addTo(map);
+
+
+ map.on(
+  "click",
+  e=>{
+
+   if(
+    confirm(
+     "آیا این نقطه به‌عنوان موقعیت ذخیره شود؟"
+    )
+   ){
+
+    addLocation(
+     e.latlng.lat,
+     e.latlng.lng,
+     null
+    );
+
+   }
+
+  }
+ );
+
+
+ loadLocations();
+
+}
+
+
+/* =========================================================
+   ADD LOCATION
+========================================================= */
+
+function addLocation(
+ lat,
+ lng,
+ accuracy
+){
+
+ const item={
+
+  id:crypto.randomUUID(),
+
+  lat:Number(lat),
+
+  lng:Number(lng),
+
+  accuracy:accuracy
+   ? Number(accuracy)
+   : null,
+
+  timestamp:
+   new Date().toISOString()
+
+ };
+
+ db.locations.push(item);
+
+ saveDB();
+
+ drawLocations();
+
+ toast(
+  "نقطه GPS با موفقیت ذخیره شد."
+ );
+
+}
+
+
+/* =========================================================
+   DRAW LOCATIONS
+========================================================= */
+
+function loadLocations(){
+
+ if(!map) return;
+
+ drawLocations();
+
+}
+
+
+function drawLocations(){
+
+ if(!locationLayer) return;
+
+ locationLayer.clearLayers();
+
+ db.locations.forEach(
+  item=>{
+
+   const marker=
+    L.marker(
+     [item.lat,item.lng]
+    ).addTo(locationLayer);
+
+   marker.bindPopup(`
+    <b>QH VisionX Location</b><br>
+    Latitude: ${item.lat.toFixed(6)}<br>
+    Longitude: ${item.lng.toFixed(6)}<br>
+    ${item.accuracy
+      ? "Accuracy: "+Math.round(item.accuracy)+" m<br>"
+      : ""}
+    ${new Date(item.timestamp)
+      .toLocaleString("fa-AF")}
+   `);
+
+  }
+ );
+
+}
+
+
+/* =========================================================
+   REAL GPS
+========================================================= */
+
+$("gpsBtn").onclick=getGPS;
+
+function getGPS(){
+
+ if(!navigator.geolocation){
+
+  toast(
+   "این مرورگر از GPS پشتیبانی نمی‌کند."
+  );
+
+  return;
+
+ }
+
+ $("gpsState").textContent=
+  "GPS در حال دریافت…";
+
+ navigator.geolocation.getCurrentPosition(
+
+  position=>{
+
+   updateGPS(position);
+
+   const lat=
+    position.coords.latitude;
+
+   const lng=
+    position.coords.longitude;
+
+   map.setView(
+    [lat,lng],
+    17
+   );
+
+   addLocation(
+    lat,
+    lng,
+    position.coords.accuracy
+   );
+
+   $("gpsState").textContent=
+    "GPS فعال";
+
+   $("gpsState").className=
+    "badge ok";
+
+   $("dashGps").textContent=
+    "فعال";
+
+  },
+
+  error=>{
+
+   $("gpsState").textContent=
+    "GPS خطا";
+
+   $("gpsState").className=
+    "badge error";
+
+   toast(
+    "خطای GPS: "+error.message+
+    " — Location و HTTPS را بررسی کنید."
+   );
+
+  },
+
+  {
+   enableHighAccuracy:true,
+   timeout:20000,
+   maximumAge:0
+  }
+
+ );
+
+}
+
+
+/* =========================================================
+   UPDATE GPS MARKER
+========================================================= */
+
+function updateGPS(position){
+
+ const lat=
+  position.coords.latitude;
+
+ const lng=
+  position.coords.longitude;
+
+ const accuracy=
+  position.coords.accuracy || 0;
+
+
+ if(!userMarker){
+
+  userMarker=L.marker(
+   [lat,lng]
+  ).addTo(map);
+
+  userMarker.bindPopup(
+   "📍 موقعیت فعلی دستگاه"
+  );
+
+ }else{
+
+  userMarker.setLatLng(
+   [lat,lng]
+  );
+
+ }
+
+
+ if(!accuracyCircle){
+
+  accuracyCircle=L.circle(
+   [lat,lng],
+   {
+    radius:accuracy
+   }
+  ).addTo(map);
+
+ }else{
+
+  accuracyCircle.setLatLng(
+   [lat,lng]
+  );
+
+  accuracyCircle.setRadius(
+   accuracy
+  );
+
+ }
+
+
+ $("coords").textContent=
+  lat.toFixed(6)+
+  ", "+
+  lng.toFixed(6)+
+  " • دقت تقریباً "+
+  Math.round(accuracy)+
+  " متر";
+
+
+ if(liveTracking){
+
+  trackingPoints.push(
+   [lat,lng]
+  );
+
+  trackingLine.setLatLngs(
+   trackingPoints
+  );
+
+ }
+
+}
+
+
+/* =========================================================
+   LIVE GPS TRACKING
+========================================================= */
+
+$("liveBtn").onclick=toggleLiveTracking;
+
+
+function toggleLiveTracking(){
+
+ if(!navigator.geolocation){
+
+  toast(
+   "GPS در مرورگر موجود نیست."
+  );
+
+  return;
+
+ }
+
+
+ if(liveTracking){
+
+  stopLiveTracking();
+
+  return;
+
+ }
+
+
+ liveTracking=true;
+
+ trackingPoints=[];
+
+ trackingLine=L.polyline(
+  [],
+  {
+   weight:5
+  }
+ ).addTo(map);
+
+
+ watchId=
+ navigator.geolocation.watchPosition(
+
+  position=>{
+
+   updateGPS(position);
+
+   $("trackState").textContent=
+    "ردیابی زنده فعال";
+
+   $("trackState").className=
+    "badge ok";
+
+   $("liveBtn").textContent=
+    "⏹️ توقف ردیابی";
+
+  },
+
+  error=>{
+
+   toast(
+    "خطای ردیابی GPS: "+
+    error.message
+   );
+
+  },
+
+  {
+   enableHighAccuracy:true,
+   timeout:20000,
+   maximumAge:2000
+  }
+
+ );
+
+ toast(
+  "ردیابی زنده GPS فعال شد."
+ );
+
+}
+
+
+function stopLiveTracking(){
+
+ if(watchId!==null){
+
+  navigator.geolocation.clearWatch(
+   watchId
+  );
+
+ }
+
+ watchId=null;
+
+ liveTracking=false;
+
+ $("liveBtn").textContent=
+  "🛰️ شروع ردیابی زنده";
+
+ $("trackState").textContent=
+  "ردیابی خاموش";
+
+ $("trackState").className=
+  "badge";
+
+ toast(
+  "ردیابی زنده متوقف شد."
+ );
+
+}
+
+
+/* =========================================================
+   ADD MANUAL MARKER
+========================================================= */
+
+$("addMarkerBtn").onclick=()=>{
+
+ const lat=prompt(
+  "Latitude را وارد کنید:"
+ );
+
+ if(lat===null)return;
+
+ const lng=prompt(
+  "Longitude را وارد کنید:"
+ );
+
+ if(lng===null)return;
+
+ if(
+  isNaN(lat) ||
+  isNaN(lng) ||
+  lat<-90 ||
+  lat>90 ||
+  lng<-180 ||
+  lng>180
+ ){
+
+  toast(
+   "مختصات واردشده معتبر نیست."
+  );
+
+  return;
+
+ }
+
+ map.setView(
+  [Number(lat),Number(lng)],
+  16
+ );
+
+ addLocation(
+  Number(lat),
+  Number(lng),
+  null
+ );
+
+};
+
+
+/* =========================================================
+   FIT ALL LOCATIONS
+========================================================= */
+
+$("fitBtn").onclick=()=>{
+
+ if(!db.locations.length){
+
+  if(userMarker){
+
+   map.setView(
+    userMarker.getLatLng(),
+    17
+   );
+
+  }else{
+
+   map.setView(
+    [34.5553,69.2075],
+    12
+   );
+
+  }
+
+  return;
+
+ }
+
+ const bounds=L.latLngBounds(
+  db.locations.map(
+   x=>[x.lat,x.lng]
+  )
+ );
+
+ if(userMarker){
+
+  bounds.extend(
+   userMarker.getLatLng()
+  );
+
+ }
+
+ map.fitBounds(
+  bounds,
+  {
+   padding:[30,30],
+   maxZoom:17
+  }
+ );
+
+};
+
+
+/* =========================================================
+   CLEAR LOCATIONS
+========================================================= */
+
+$("clearMarkersBtn").onclick=()=>{
+
+ if(
+  !confirm(
+   "تمام نقاط ذخیره‌شده GPS حذف شوند؟"
+  )
+ )return;
+
+ db.locations=[];
+
+ saveDB();
+
+ drawLocations();
+
+ toast(
+  "نقاط GPS پاک شدند."
+ );
+
+};
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+$("searchBtn").onclick=searchPlace;
+
+$("searchInput").addEventListener(
+ "keydown",
+ e=>{
+  if(e.key==="Enter")
+   searchPlace();
+ }
+);
+
+
+async function searchPlace(){
+
+ const q=
+  $("searchInput").value.trim();
+
+ if(!q){
+
+  toast(
+   "نام مکان را وارد کنید."
+  );
+
+  return;
+
+ }
+
+ $("mapStatus").textContent=
+  "در حال جستجو…";
+
+ try{
+
+  const url=
+   "https://nominatim.openstreetmap.org/search"+
+   "?format=jsonv2"+
+   "&limit=5"+
+   "&countrycodes=af"+
+   "&q="+
+   encodeURIComponent(q);
+
+  const response=
+   await fetch(url);
+
+  const results=
+   await response.json();
+
+  if(!results.length){
+
+   toast(
+    "مکان پیدا نشد."
+   );
+
+   $("mapStatus").textContent=
+    "نتیجه‌ای پیدا نشد.";
+
+   return;
+
+  }
+
+  const first=results[0];
+
+  const lat=
+   Number(first.lat);
+
+  const lng=
+   Number(first.lon);
+
+  map.setView(
+   [lat,lng],
+   16
+  );
+
+  const marker=
+   L.marker(
+    [lat,lng]
+   ).addTo(map);
+
+  marker.bindPopup(
+   "<b>"+escapeHTML(
+    first.display_name
+   )+"</b>"
+  ).openPopup();
+
+  $("mapStatus").textContent=
+   first.display_name;
+
+ }catch(error){
+
+  toast(
+   "خطا در جستجوی نقشه."
+  );
+
+ }
+
+}
+
+
+/* =========================================================
+   INCIDENTS
+========================================================= */
+
+$("addIncidentBtn").onclick=()=>{
+
+ const title=
+  $("incidentTitle").value.trim();
+
+ const location=
+  $("incidentLocation").value.trim();
+
+ if(!title){
+
+  toast(
+   "عنوان رویداد الزامی است."
+  );
+
+  return;
+
+ }
+
+ const incident={
+
+  id:crypto.randomUUID(),
+
+  title,
+
+  location,
+
+  priority:
+   $("incidentPriority").value,
+
+  status:
+   $("incidentStatus").value,
+
+  description:
+   $("incidentDescription").value.trim(),
+
+  timestamp:
+   new Date().toISOString()
+
+ };
+
+ db.incidents.push(
+  incident
+ );
+
+ saveDB();
+
+ $("incidentTitle").value="";
+ $("incidentLocation").value="";
+ $("incidentDescription").value="";
+
+ toast(
+  "رویداد ثبت شد."
+ );
+
+};
+
+
+function deleteIncident(id){
+
+ if(
+  !confirm(
+   "این رویداد حذف شود؟"
+  )
+ )return;
+
+ db.incidents=
+  db.incidents.filter(
+   x=>x.id!==id
+  );
+
+ saveDB();
+
+}
+
+
+/* =========================================================
+   TEAMS
+========================================================= */
+
+$("addTeamBtn").onclick=()=>{
+
+ const name=
+  $("teamName").value.trim();
+
+ const lead=
+  $("teamLead").value.trim();
+
+ if(!name){
+
+  toast(
+   "نام تیم الزامی است."
+  );
+
+  return;
+
+ }
+
+ db.teams.push({
+
+  id:crypto.randomUUID(),
+
+  name,
+
+  lead
+
+ });
+
+ saveDB();
+
+ $("teamName").value="";
+ $("teamLead").value="";
+
+ toast(
+  "تیم اضافه شد."
+ );
+
+};
+
+
+function deleteTeam(id){
+
+ if(
+  !confirm(
+   "این تیم حذف شود؟"
+  )
+ )return;
+
+ db.teams=
+  db.teams.filter(
+   x=>x.id!==id
+  );
+
+ saveDB();
+
+}
+
+
+/* =========================================================
+   UI REFRESH
+========================================================= */
+
+function refreshUI(){
+
+ const incidents=
+  db.incidents;
+
+ const open=
+  incidents.filter(
+   x=>x.status!=="closed"
+  ).length;
+
+
+ $("statIncidents").textContent=
+  incidents.length;
+
+ $("statOpen").textContent=
+  open;
+
+ $("statTeams").textContent=
+  db.teams.length;
+
+ $("statLocations").textContent=
+  db.locations.length;
+
+
+ $("reportIncidents").textContent=
+  incidents.length;
+
+ $("reportTeams").textContent=
+  db.teams.length;
+
+ $("reportLocations").textContent=
+  db.locations.length;
+
+
+ renderIncidents();
+
+ renderTeams();
+
+ updateOnlineState();
+
+}
+
+
+/* =========================================================
+   INCIDENT TABLE
+========================================================= */
+
+function renderIncidents(){
+
+ const table=
+  $("incidentTable");
+
+ if(!db.incidents.length){
+
+  table.innerHTML=
+   `<tr><td colspan="6" class="empty">
+   هیچ رویدادی ثبت نشده است.
+   </td></tr>`;
+
+  return;
+
+ }
+
+
+ table.innerHTML=
+  db.incidents
+   .slice()
+   .reverse()
+   .map(x=>`
+
+   <tr>
+
+   <td>
+    ${escapeHTML(x.title)}
+   </td>
+
+   <td>
+    <span class="badge">
+     ${priorityText(x.priority)}
+    </span>
+   </td>
+
+   <td>
+    ${escapeHTML(x.location||"—")}
+   </td>
+
+   <td>
+    ${statusText(x.status)}
+   </td>
+
+   <td>
+    ${new Date(x.timestamp)
+      .toLocaleString("fa-AF")}
+   </td>
+
+   <td>
+    <button
+     class="btn danger"
+     onclick="deleteIncident('${x.id}')">
+     حذف
+    </button>
+   </td>
+
+   </tr>
+
+  `)
+  .join("");
+
+}
+
+
+function priorityText(x){
+
+ return {
+
+  low:"پایین",
+
+  medium:"متوسط",
+
+  high:"بالا",
+
+  critical:"بحرانی"
+
+ }[x] || x;
+
+}
+
+
+function statusText(x){
+
+ return {
+
+  open:"باز",
+
+  progress:"در حال رسیدگی",
+
+  closed:"بسته"
+
+ }[x] || x;
+
+}
+
+
+/* =========================================================
+   TEAM LIST
+========================================================= */
+
+function renderTeams(){
+
+ const el=
+  $("teamList");
+
+ if(!db.teams.length){
+
+  el.innerHTML=
+   `<div class="empty">
+   هیچ تیمی ثبت نشده است.
+   </div>`;
+
+  return;
+
+ }
+
+
+ el.innerHTML=
+  db.teams.map(
+   x=>`
+
+   <div class="card"
+   style="margin-bottom:8px">
+
+   <strong>
+    ${escapeHTML(x.name)}
+   </strong>
+
+   <div class="muted">
+    مسئول: ${escapeHTML(x.lead||"—")}
+   </div>
+
+   <button
+    class="btn danger"
+    onclick="deleteTeam('${x.id}')">
+    حذف
+   </button>
+
+   </div>
+
+   `
+  ).join("");
+
+}
+
+
+/* =========================================================
+   ONLINE STATE
+========================================================= */
+
+function updateOnlineState(){
+
+ const online=
+  navigator.onLine;
+
+ $("onlineState").textContent=
+  online
+   ? "آنلاین"
+   : "آفلاین";
+
+ $("onlineState").className=
+  online
+   ? "badge ok"
+   : "badge error";
+
+ $("dashOnline").textContent=
+  online
+   ? "اتصال اینترنت فعال"
+   : "آفلاین";
+
+}
+
+
+window.addEventListener(
+ "online",
+ updateOnlineState
+);
+
+window.addEventListener(
+ "offline",
+ updateOnlineState
+);
+
+
+/* =========================================================
+   EXPORT JSON
+========================================================= */
+
+$("exportBtn").onclick=()=>{
+
+ const json=
+  JSON.stringify(
+   db,
+   null,
+   2
+  );
+
+ const blob=
+  new Blob(
+   [json],
+   {
+    type:"application/json"
+   }
+  );
+
+ const url=
+  URL.createObjectURL(blob);
+
+ const a=
+  document.createElement("a");
+
+ a.href=url;
+
+ a.download=
+  "qh-visionx-response-data-"+
+  Date.now()+
+  ".json";
+
+ a.click();
+
+ URL.revokeObjectURL(url);
+
+ toast(
+  "فایل JSON صادر شد."
+ );
+
+};
+
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+$("clearGpsBtn").onclick=()=>{
+
+ if(
+  !confirm(
+   "تاریخچه GPS پاک شود؟"
+  )
+ )return;
+
+ db.locations=[];
+
+ saveDB();
+
+ drawLocations();
+
+ toast(
+  "تاریخچه GPS پاک شد."
+ );
+
+};
+
+
+$("clearAllBtn").onclick=()=>{
+
+ if(
+  !confirm(
+   "تمام داده‌های سامانه پاک شود؟"
+  )
+ )return;
+
+ localStorage.removeItem(
+  STORAGE_KEY
+ );
+
+ location.reload();
+
+};
+
+
+/* =========================================================
+   HTML SECURITY
+========================================================= */
+
+function escapeHTML(value){
+
+ return String(value)
+  .replaceAll("&","&amp;")
+  .replaceAll("<","&lt;")
+  .replaceAll(">","&gt;")
+  .replaceAll('"',"&quot;")
+  .replaceAll("'","&#039;");
+
+}
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+updateOnlineState();
+
+refreshUI();
+
+if(
+ sessionStorage.getItem("qh_logged_in")==="1"
+){
+
+ setTimeout(
+  initializeMap,
+  100
+ );
+
+}
+
+
+/* =========================================================
+   CLEANUP
+========================================================= */
+
+window.addEventListener(
+ "beforeunload",
+ ()=>{
+
+  if(watchId!==null){
+
+   navigator.geolocation.clearWatch(
+    watchId
+   );
+
+  }
+
+ }
+);
+
+</script>
+
+</body>
+</html>
